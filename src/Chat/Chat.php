@@ -9,6 +9,8 @@
 
 namespace App\Chat;
 
+use App\Chat\Handler\AddMessageHandler;
+use App\Chat\Handler\AddUserHandler;
 use App\Server;
 use LogicException;
 use Ratchet\ConnectionInterface;
@@ -105,6 +107,9 @@ class Chat
         $user = new User($id, $connection->remoteAddress, $username);
 		$this->users[$id] = $user;
 
+		$this->notifyOne($connection, $this->formatAddUserResponse());
+        $this->addMessage($this->admin, sprintf('User "%s" joined the chat.', $user->getUsername()));
+
 		if ($user->hasDefaultUsername()) {
 		    $this->notifyOne(
 		        $connection,
@@ -116,8 +121,6 @@ class Chat
                 $this->formatInfoResponse(sprintf('Welcome, %s. Enjoy chatting.', $user->getUsername()))
             );
         }
-
-        $this->addMessage($this->admin, sprintf('User "%s" joined the chat.', $user->getUsername()));
 	}
 
     /**
@@ -127,7 +130,7 @@ class Chat
     {
         try {
             $user = $this->getUser($connection);
-            $this->addMessage($user->getUsername(), 'Bye bye, I\'m leaving this chat.');
+            $this->addMessage($user, 'Bye bye, I\'m leaving this chat.');
         }  catch (LogicException $e) {
             // Be silent
         }
@@ -173,11 +176,34 @@ class Chat
     private function formatMessageResponse(Message $message)
     {
         return [
-            'type' => Server::TYPE_MESSAGE,
+            'type' => AddMessageHandler::KEY,
             'data' => [
                 'content' => $message->getContent(),
-                'author' => $message->getAuthor(),
+                'author' => $message->getAuthor()->getUsername(),
                 'created' => $message->getCreated()->getTimestamp(),
+            ],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function formatAddUserResponse()
+    {
+        $messages = [];
+        /** @var Message $m */
+        foreach ($this->messages as $m) {
+            $messages[] = [
+                'content' => $m->getContent(),
+                'author' => $m->getAuthor()->getUsername(),
+                'created' => $m->getCreated()->getTimestamp(),
+            ];
+        }
+
+        return [
+            'type' => AddUserHandler::KEY,
+            'data' => [
+                'messages' => $messages,
             ],
         ];
     }

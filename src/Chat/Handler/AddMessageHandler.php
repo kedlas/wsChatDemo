@@ -17,7 +17,7 @@ use Ratchet\ConnectionInterface;
 class AddMessageHandler implements HandlerInterface
 {
 
-    public const KEY = 'add_message';
+    public const KEY = 'message';
 
     /**
      * @var Chat

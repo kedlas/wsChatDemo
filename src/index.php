@@ -6,9 +6,7 @@ use Ratchet\Http\HttpServer;
 use Ratchet\Server\IoServer;
 use Ratchet\WebSocket\WsServer;
 
-$loader = require dirname(__DIR__) . '/vendor/autoload.php';
-
-sleep(100000);
+require __DIR__ . '/../vendor/autoload.php';
 
 $router = new Router(new Chat());
 

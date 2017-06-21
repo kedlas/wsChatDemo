@@ -1,7 +1,16 @@
 # wsChatDemo
 websockets Chat app demo
 
+How to run this demo
+
 ```
-docker build -t chatimage .
-docker rm -f chat && docker run -d -p 8080:8080 -v `pwd`:/app --name chat chatimage
+git@github.com:kedlas/wsChatDemo.git
+
+composer install
+
+docker build -t chat_image .
+
+docker rm -f chat
+
+docker run -d -p 8080:8080 --name chat chat_image
 ```

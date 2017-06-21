@@ -19,7 +19,6 @@ class Server implements MessageComponentInterface
 {
 
     public const TYPE_INFO = 'info';
-    public const TYPE_MESSAGE = 'message';
     public const TYPE_ERROR = 'error';
 
     /**
