@@ -4,7 +4,7 @@ websockets Chat app demo
 How to run this demo
 
 ```
-git@github.com:kedlas/wsChatDemo.git
+git clone git@github.com:kedlas/wsChatDemo.git
 
 composer install
 
